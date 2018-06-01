@@ -29,38 +29,46 @@ class Idea extends Component {
 	delete() {
 		// alert('delete it')
 		console.log('deleting')
+		this.props.onDelete(this.props.index)
+	}
+	save(e) {
+		e.preventDefault()
+		this.props.onChange(this.newIdea.value, this.props.index)
+		// alert(this.newIdea.value)
+		console.log('saving')
 		this.setState({
 			editing: false
 		})
+
 		console.log(`editing = ${this.state.editing}`)
 	}
-	save() {
-		alert(this.newIdea.value)
-		console.log('saving')
-		this.state.editing = false
-		console.log(`editing = ${this.state.editing}`)
-	}
+
 	renderForm() {
 		return (
-			<div><form><textarea ref={input => this.newIdea = input}/>
-				<button onClick={this.save}>Save <MdSave/></button>
-			</form></div>
+			<div>
+			<form onSubmit={this.save}>
+				<textarea ref={input => this.newIdea = input}/>
+				<button className="btn btn-primary" onClick={this.save}>Save <MdSave/></button>
+			</form>
+			</div>
 		)
 	}
 	renderUI() {
 		return (
 			<div className='idea'>
-				<p>{this.props.children}</p>
+			<div className="card-body">
+				<div>{this.props.children}</div>
 				<span>
-					<button onClick={this.edit}>Edit <MdEdit/></button>
-					<button onClick={this.delete}>Delete <MdDelete/></button>
+					<button className="btn btn-primary" style={{marginRight: 7+'px'}} onClick={this.edit}>Edit <MdEdit/></button>
+					<button className="btn btn-primary" onClick={this.delete}>Delete <MdDelete/></button>
 				</span>				
+				</div>
 			</div>			
 		)
 	}
 
 	render() {
-		if (this.state.editing == true) 
+		if (this.state.editing === true) 
 			return this.renderForm();
 		else
 			return this.renderUI();
