@@ -4,7 +4,7 @@ import MdAdd from 'react-icons/lib/md/add'
 import data from '../data/data.json'
 
 class IdeasList extends Component {
-
+	numForId = 4;
 	constructor(props) { 
 		super(props)
 		this.state = {
@@ -18,7 +18,7 @@ class IdeasList extends Component {
 		this.update = this.update.bind(this)
 		this.delete = this.delete.bind(this)
 		this.add = this.add.bind(this)
-		this.nextID = this.nextID.bind(this)
+		// this.nextID = this.nextID.bind(this)
 	}
 	// componentWillMount() {
 	// 	var self=this
@@ -36,16 +36,17 @@ class IdeasList extends Component {
 		 	.then((data) => {
 		 		var self=this;
 		 		data.map((data) => {
-		 		console.log('idea')
-		 		self.add(data.idea, data.group);
-		 	})
-		 })
+		 			console.log('idea')
+		 			self.add(data.id, data.idea, data.group);
+		 		})
+			 })
 	 }
 	eachIdea(idea, i) {
+		console.log(idea.id)
 		return (
-			<div key={'container'+i} >
+			<div key={'container '+i} >
 			<div className="card-body">
-				<Idea key={i} index={i} 
+				<Idea key={idea.id} index={idea.id} 
 				onChange={this.update}
 				onDelete={this.delete}>
 					<h5 className="card-title">{idea.idea}</h5>
@@ -69,27 +70,30 @@ class IdeasList extends Component {
 			ideas: prevState.ideas.filter(idea => idea.id !== id)
 		}))
 	}
-	add(txt, grp) {
-		 // var txt="some txt", grp="some grp";
+	add(id, txt, grp) {
+		console.log(typeof id)
+		if ((typeof id) !== 'number') {
+			var txt = "some txt";
+			var grp = "some grp";
+			var id = this.numForId++;
+		}
+
 		this.setState(prevState => ({
 			ideas: [
 				...prevState.ideas,
 				{
-					id:this.nextID(),
+					id:id,
 					idea: txt,
 					group: grp
 				}]
 		}))
+		
 	}	
-	nextID() {
-		this.uniqeId = this.uniqeId || 0
-		return this.uniqeId++
-	}
+
 	render() {
 		return (
 		 <div className="card ideasList" style={{width: 18+'rem', marginBottom: 7+'px'}}>
-		 	
-				{this.state.ideas.map(this.eachIdea)}
+		 	{this.state.ideas.map(this.eachIdea)}
 			<br/><button onClick={this.add}
 			id="add" className="btn btn-primary" style={{marginRight: 7+'px'}}>
 			Add <MdAdd/></button>
